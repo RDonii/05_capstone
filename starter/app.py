@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy.sql.base import NO_ARG
 from sqlalchemy.sql.functions import count
-from .database.models import create_db, City, Rest
+from database.models import create_db, City, Rest
 
 def create_app(test_config=None):
   # create and configure the app
@@ -16,10 +16,10 @@ def create_app(test_config=None):
   def home_page():
     return 'not implemented'
 
-  @app.route('/cities', methods = 'GET')
+  @app.route('/cities', methods = ['GET'])
   def get_all_city():
     all_city_query = City.query.all()
-    city_formated = [city.format for city in all_city_query]
+    city_formated = [city.format() for city in all_city_query]
     count = len(city_formated)
 
     return jsonify({
@@ -27,10 +27,10 @@ def create_app(test_config=None):
       'count': count
     })
 
-  @app.route('/restaurants')
+  @app.route('/restaurants', methods = ["GET"])
   def get_all_restaurants():
     all_restaurants_query = Rest.query.all()
-    restaurant_formated = [rest.format for rest in all_restaurants_query]
+    restaurant_formated = [rest.format() for rest in all_restaurants_query]
     count = len(restaurant_formated)
 
     return jsonify({
@@ -38,77 +38,104 @@ def create_app(test_config=None):
       'count': count
     })
 
-  @app.route('/restaurants/<int:id>', methods = 'DELETE')
+  @app.route('/restaurants/<int:id>', methods = ['DELETE'])
   def delete_restaurant(id):
-    restaurant = Rest.query.filter(Rest.id==id).one_or_none()
-    if restaurant in None:
-      abort(404)
-    
-    restaurant.delete()
+    try:
+      restaurant = Rest.query.filter(Rest.id==id).one_or_none()
+      if restaurant in None:
+        abort(404)
+      
+      restaurant.delete()
+    except:
+      abort(422)
   
-  @app.route('/restaurants/', methods = 'POST')
+  @app.route('/restaurants/', methods = ['POST'])
   def post_new_restaurant():
     data = request.get_json()
 
     n_name = data.get('name', None)
     n_description = data.get('description', None)
     n_city = data.get('city', None)
-    
-    new_city = City.query.filter((City.name).lower==n_city.lower).one_or_none()
-    if new_city==None:
-      new_city = City(name=n_city)
-      new_city.insert()
 
-    new_restaurant = Rest(name=n_name, description=n_description, city_id=new_city.id)
-    new_restaurant.insert()
-
-    new_restaurant_formated = new_restaurant.format()
-
-    return jsonify({
-      'restaurant': new_restaurant_formated
-    })
-  
-  @app.route('/restaurants/<int:id>', methods = "PATCH")
-  def update_restaurant(id):
-    rest = Rest.query.filter(Rest.id==id).one_or_none()
-    if rest==None:
-      abort(404)
-    
-    data = request.get_json()
-    n_name = data.get('name', None)
-    n_description = data.get('description', None)
-    n_city = data.get('city', None)
-
-    if n_name!=None:
-      rest.name = n_name
-    if n_description!=None:
-      rest.description = n_description
-    if n_city!= None:
+    try:
       new_city = City.query.filter((City.name).lower==n_city.lower).one_or_none()
       if new_city==None:
         new_city = City(name=n_city)
         new_city.insert()
-      
-      rest.city_id = new_city.id
+
+      new_restaurant = Rest(name=n_name, description=n_description, city_id=new_city.id)
+      new_restaurant.insert()
+
+      new_restaurant_formated = new_restaurant.format()
+
+      return jsonify({
+        'restaurant': new_restaurant_formated
+      })
     
-    rest.update()
+    except:
+      abort(422)
+  
+  @app.route('/restaurants/<int:id>', methods = ["PATCH"])
+  def update_restaurant(id):
+    try:
+      rest = Rest.query.filter(Rest.id==id).one_or_none()
+      if rest==None:
+        abort(404)
+      
+      data = request.get_json()
+      n_name = data.get('name', None)
+      n_description = data.get('description', None)
+      n_city = data.get('city', None)
 
-    restaurant_formated = rest.format()
+      if n_name!=None:
+        rest.name = n_name
+      if n_description!=None:
+        rest.description = n_description
+      if n_city!= None:
+        new_city = City.query.filter((City.name).lower==n_city.lower).one_or_none()
+        if new_city==None:
+          new_city = City(name=n_city)
+          new_city.insert()
+        
+        rest.city_id = new_city.id
+      
+      rest.update()
 
-    return jsonify({
-      'restaurant': restaurant_formated
-    })
+      restaurant_formated = rest.format()
 
-  @app.route('/cities/<int:id>/restaurants')
+      return jsonify({
+        'restaurant': restaurant_formated
+      })
+    
+    except:
+      abort(422)
+
+  @app.route('/cities/<int:id>/restaurants', methods = ["GET"])
   def restaurants_by_city(id):
     restaurants_query = Rest.query.filter(Rest.id==id)
-    restaurants_formated = [rest.format for rest in restaurants_query]
+    restaurants_formated = [rest.format() for rest in restaurants_query]
     count = len(restaurants_formated)
+    if count==0:
+      abort(404)
 
     return jsonify({
       'restaurants': restaurants_formated,
       'count': count
     })
+
+  @app.errorhandler(404)
+  def not_found(error):
+    return (jsonify({
+      'error': 404,
+      'message': 'not found'
+    }), 404)
+  
+  @app.errorhandler(422)
+  def unprocessable(error):
+    return (jsonify({
+      'error': 422,
+      'message': 'unprocessable'
+    }), 422)
 
   return app
 
