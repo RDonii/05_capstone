@@ -46,6 +46,11 @@ def create_app(test_config=None):
         abort(404)
       
       restaurant.delete()
+
+      return jsonify({
+        'deleted': restaurant.id
+      })
+
     except:
       abort(422)
   
