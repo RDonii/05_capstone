@@ -25,7 +25,7 @@ class City(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    cafe = db.relationship('Cafe', backref='city')
+    restaurant = db.relationship('Rest', backref='city')
 
     def __init__(self, name):
         self.name = name
@@ -47,15 +47,17 @@ class City(db.Model):
         'name': self.name
         }
 
-class Cafe(db.Model):
-    __tablename__ = 'cafe'
+class Rest(db.Model):
+    __tablename__ = 'restaurant'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    description = Column(String)
     city_id = Column(Integer, ForeignKey('city.id'), nullable=False)
 
-    def __init__(self, name, city_id):
+    def __init__(self, name, description,city_id):
         self.name = name
+        self.description = description
         self.city_id = city_id
 
     def insert(self):
@@ -73,5 +75,6 @@ class Cafe(db.Model):
         return {
         'id': self.id,
         'name': self.name,
+        'description': self.description,
         'city_id': self.city_id
         }
