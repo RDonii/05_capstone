@@ -30,73 +30,71 @@ class CapstoneTestCase(unittest.TestCase):
         """
         pass
 
-    def get_all_cities(self):
+    def test_get_all_cities(self):
         res = self.client().get('/cities')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(len(data['cities']))
 
-    def get_all_restaurants(self):
+    def test_get_all_restaurants(self):
         res = self.client().get('/restaurants')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(len(data['restaurants']))
     
-    def post_new_restaurant(self):
+    def test_post_new_restaurant(self):
         res = self.client().post('/restaurants', json={"name": "La Piola", "description": "Tasty plov", "city": "Tashkent"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['restaurant'])
 
-    def update_restaurant(self):
-        res = self.client().patch('/restaurants/1', json={"name": "Buxoro cafe", "description": "uch etajlik", "city": "Buxoro"})
+    def test_update_restaurant(self):
+        res = self.client().patch('/restaurants/2', json={"name": "Buxoro cafe", "description": "uch etajlik", "city": "Buxoro"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['name'], "Buxoro cafe")
-        self.assertEqual(data['city'], "Buxoro")
         self.assertTrue(data["restaurant"])    
     
-    def delete_restaurant(self):
+    def test_delete_restaurant(self):
         res = self.client().delete('/restaurants/1')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['deleted'])
 
-    def get_restaurants_by_city(self):
-        res = self.client().get('/cities/1/restaurants')
+    def test_get_restaurants_by_city(self):
+        res = self.client().get('/cities/2/restaurants')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertNotEqual(data["count"], 0)
         self.assertTrue(len(data['restaurants']))
 
-    def error_delete_restaurant(self):
+    def test_error_delete_restaurant(self):
         res = self.client().delete('/restaurants/99999')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['message'], 'not found')
 
-    def error_post_new_restaurant(self):
-        res = self.client().post('/restaurants/')
+    def test_error_post_new_restaurant(self):
+        res = self.client().post('/restaurants', json={})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['message'], 'unprocessable')
     
-    def error_update_restaurant(self):
+    def test_error_update_restaurant(self):
         res = self.client().patch('/restaurants/52525252852', json={"name": "Buxoro cafe", "description": "uch etajlik", "city": "Buxoro"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['message'], 'not found')
 
-    def error_get_restaurants_by_city(self):
+    def test_error_get_restaurants_by_city(self):
         res = self.client().get('/cities/9999999/restaurants')
         data = json.loads(res.data)
 

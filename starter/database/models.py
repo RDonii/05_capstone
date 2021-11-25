@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import backref
 from sqlalchemy.sql.expression import false
 from sqlalchemy.sql.schema import ForeignKey
+import json
 
 load_dotenv()
 
@@ -53,11 +54,14 @@ class Rest(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String)
+    # the required datatype is [{'meal1': string, 'meal2': string, 'meal3':string, 'meal4':string, 'meal5':string}]
+    menu = Column(String)
     city_id = Column(Integer, ForeignKey('city.id'), nullable=False)
 
-    def __init__(self, name, description,city_id):
+    def __init__(self, name, description, menu,city_id):
         self.name = name
         self.description = description
+        self.menu = menu
         self.city_id = city_id
 
     def insert(self):
@@ -76,5 +80,6 @@ class Rest(db.Model):
         'id': self.id,
         'name': self.name,
         'description': self.description,
+        'menu': json.loads(self.menu),
         'city_id': self.city_id
         }

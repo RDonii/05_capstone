@@ -5,6 +5,10 @@ from flask_cors import CORS
 from sqlalchemy.sql.base import NO_ARG
 from sqlalchemy.sql.functions import count
 from database.models import create_db, City, Rest
+from sqlalchemy import func, or_
+from auth.auth import AuthError, requires_auth
+import json
+
 
 def create_app(test_config=None):
   # create and configure the app
@@ -39,11 +43,12 @@ def create_app(test_config=None):
     })
 
   @app.route('/restaurants/<int:id>', methods = ['DELETE'])
-  def delete_restaurant(id):
+  @requires_auth('delete:restaurants')
+  def delete_restaurant(payload, id):
+    restaurant = Rest.query.filter(Rest.id==id).one_or_none()
+    if restaurant==None:
+      abort(404)
     try:
-      restaurant = Rest.query.filter(Rest.id==id).one_or_none()
-      if restaurant in None:
-        abort(404)
       
       restaurant.delete()
 
@@ -54,24 +59,27 @@ def create_app(test_config=None):
     except:
       abort(422)
   
-  @app.route('/restaurants/', methods = ['POST'])
-  def post_new_restaurant():
+  @app.route('/restaurants', methods = ['POST'])
+  @requires_auth('post:restaurants')
+  def post_new_restaurant(payload):
     data = request.get_json()
 
     n_name = data.get('name', None)
     n_description = data.get('description', None)
+    n_menu = data.get('menu', None)
     n_city = data.get('city', None)
 
     try:
-      new_city = City.query.filter((City.name).lower==n_city.lower).one_or_none()
+      new_city = City.query.filter(func.lower(City.name)==func.lower(n_city)).one_or_none()
       if new_city==None:
         new_city = City(name=n_city)
         new_city.insert()
 
-      new_restaurant = Rest(name=n_name, description=n_description, city_id=new_city.id)
+      n_menu = "["+json.dumps(n_menu)+"]"
+      new_restaurant = Rest(name=n_name, description=n_description, menu=n_menu, city_id=new_city.id)
       new_restaurant.insert()
 
-      new_restaurant_formated = new_restaurant.format()
+      new_restaurant_formated = [new_restaurant.format()]
 
       return jsonify({
         'restaurant': new_restaurant_formated
@@ -81,23 +89,27 @@ def create_app(test_config=None):
       abort(422)
   
   @app.route('/restaurants/<int:id>', methods = ["PATCH"])
-  def update_restaurant(id):
-    try:
-      rest = Rest.query.filter(Rest.id==id).one_or_none()
-      if rest==None:
-        abort(404)
-      
+  @requires_auth('patch:restaurants')
+  def update_restaurant(payload, id):
+    rest = Rest.query.filter(Rest.id==id).one_or_none()
+    if rest==None:
+      abort(404)
+    try:      
       data = request.get_json()
       n_name = data.get('name', None)
       n_description = data.get('description', None)
+      n_menu = data.get('menu', None)
       n_city = data.get('city', None)
 
       if n_name!=None:
         rest.name = n_name
       if n_description!=None:
         rest.description = n_description
+      if n_menu!=None:
+        n_menu = "["+json.dumps(n_menu)+"]"
+        rest.menu = n_menu
       if n_city!= None:
-        new_city = City.query.filter((City.name).lower==n_city.lower).one_or_none()
+        new_city = City.query.filter(func.lower(City.name)==func.lower(n_city)).one_or_none()
         if new_city==None:
           new_city = City(name=n_city)
           new_city.insert()
@@ -106,7 +118,7 @@ def create_app(test_config=None):
       
       rest.update()
 
-      restaurant_formated = rest.format()
+      restaurant_formated = [rest.format()]
 
       return jsonify({
         'restaurant': restaurant_formated
@@ -141,6 +153,12 @@ def create_app(test_config=None):
       'error': 422,
       'message': 'unprocessable'
     }), 422)
+  
+  @app.errorhandler(AuthError)
+  def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
   return app
 
