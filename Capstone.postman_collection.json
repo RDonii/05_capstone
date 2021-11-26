@@ -1,0 +1,677 @@
+{
+	"info": {
+		"_postman_id": "ecd8195a-ff4b-4f8b-a891-c04daec8d169",
+		"name": "Capstone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "public",
+			"item": [
+				{
+					"name": "GET all cities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains cities array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.cities).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//cities",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all restaurants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains restaurants array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.restaurants).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//restaurants",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET restaurants by city",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//cities/1/restaurants",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"cities",
+								"1",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 get restaurants by city",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//cities/999999/restaurants",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"cities",
+								"999999",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 POST new restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Buxoro cafe\",\r\n    \"description\": \"uch etajlik\",\r\n    \"city\": \"Buxoro\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}//restaurants",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 update restaurants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Buxoro cafe\",\r\n    \"description\": \"uch etajlik\",\r\n    \"city\": \"Buxoro\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}//restaurants/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 delete restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//restaurants/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chief",
+			"item": [
+				{
+					"name": "POST new restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains restaurants array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.restaurant).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Choyxona\",\r\n    \"description\": \"Cooks the best plov\",\r\n    \"menu\": {\"meal1\": \"plov\",\r\n              \"meal2\": \"samsa\",\r\n              \"meal3\": \"lagman\",\r\n              \"meal4\": \"manti\",\r\n              \"meal5\": \"vaju\"},\r\n    \"city\": \"Kokand\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}//restaurants",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "403 update restaurants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Buxoro cafe\",\r\n    \"description\": \"uch etajlik\",\r\n    \"city\": \"Buxoro\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}//restaurants/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "422 post new restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{host}}//restaurants",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "403 delete restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//restaurants/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImVWdDhqUm1IRXY1X3JYOTBfQlhDMiJ9.eyJpc3MiOiJodHRwczovL2Rldi15MTltLTYxNC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjE5ZTZjN2VhNzA3NjUwMDZhMTNjN2UzIiwiYXVkIjoibWVudSIsImlhdCI6MTYzNzk1MTA1NSwiZXhwIjoxNjM4MDM3NDU1LCJhenAiOiJrcThJSnJFSVlOMFF0Z3FkcjNHRGdsYVFSYThWYVpobCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsicG9zdDpyZXN0YXVyYW50cyJdfQ.IfRNKE1kmt84TVUX60y-kMKIbm68_A-seRoCu3QPcO2aec0_c7KRTHPhZq6Aq8IPiZGFcj4OwEnTDvzf4Mu97yuBHPPVR2zDDutVIdu_LrHNhMhpe12h3ioCpA_9KeC50s86DZge1MRe4IjaEc_F-rpNmUWh5kTiWyFCEpW9Yg4-rTVpkNojh8az73Ay5AwLhogNQoApkJb7ri62vD68rvdKmV_U3_1SxISVarllaKWZonfWEZj_jMa71hsMTC-EfIQG7ShZCXpv4SwQmh7YmiPtG98O_duabE1pOGAwWiIDHgZ7ZghMVAzELz89D3M3qFigzX1wdXSM2pEa0qRFHQ",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "manager",
+			"item": [
+				{
+					"name": "update restaurants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains drinks array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.restaurant).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"menu\": {\"meal1\": \"mastava\",\r\n             \"meal2\": \"borj\",\r\n             \"meal3\": \"kabab\",\r\n             \"meal4\": \"tabaka\",\r\n             \"meal5\": \"dimlama\"}\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}//restaurants/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//restaurants/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 delete restaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}//restaurants/999999",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 update restaurants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Buxoro cafe\",\r\n    \"description\": \"uch etajlik\",\r\n    \"city\": \"Buxoro\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}//restaurants/999999",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"",
+								"restaurants",
+								"999999"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImVWdDhqUm1IRXY1X3JYOTBfQlhDMiJ9.eyJpc3MiOiJodHRwczovL2Rldi15MTltLTYxNC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjE5ZTZkNDlhOWVlMTAwMDcxODU2YmY1IiwiYXVkIjoibWVudSIsImlhdCI6MTYzNzk1MDc5NiwiZXhwIjoxNjM4MDM3MTk2LCJhenAiOiJrcThJSnJFSVlOMFF0Z3FkcjNHRGdsYVFSYThWYVpobCIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOnJlc3RhdXJhbnRzIiwicGF0Y2g6cmVzdGF1cmFudHMiLCJwb3N0OnJlc3RhdXJhbnRzIl19.HGSj2QyV30xbw3lZF8s0JRRPN1hT3-3HiAWJtRBejg2nZVTH63Tb7fbmTwBzwQmmSQfA7xbEmgV2T8e6Mr-K9rihrc3bOUjtoVEjn4XVgreddX0vEOSAP-gtQxibMWik4e_y2dly4heF_5I8I1F2iDITWf8AHY8QDZM5MZ4VnsRl5T-C26n_WnaaGIWzEH9Am5OfkWiDjpslZHCGXqGwBdBg0Vx7VjxVkj4dgaGZEQs-lWRZGdan4V0zaPC7Ke7aveRXFZ4F_dUHM7CltUKbPdVMNJHaHkfNsAbUij0qUQkjAVKKiN49XeeXE0O4Ltar0qQnBOPERQKUKBhVkDNfrA",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "https://tmenu.herokuapp.com/"
+		}
+	]
+}

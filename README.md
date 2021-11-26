@@ -6,160 +6,143 @@ This is the simple "Menu" API project. Everyone can get information about todays
 
 ## API
 
-In order to use the API users don't need to be authenticated, but for adding new restaurant - it is indeed crucial. Users can either have a guest, chief and manager status. An overview of the API can be found below as well as in the provided postman collection.
+In order to use the API users don't need to be authentificated, but for adding new restaurant - it is indeed crucial. Users can either have a guest, chief and manager status. An overview of the API can be found below as well as in the provided postman collection.
 
-### Retreiving data (Guests and members)
+### Retreiving data
 
-**GET** `/posts`
+**GET** `/cities`
 
-Retrieves all posts
+Retrieves list of all cities and number of them.
 
 ```
 curl -X GET \
-  https://blog03-api.herokuapp.com/posts'
+  https://tmenu.herokuapp.com/cities'
 ```
 
 Sample response:
 ```
 {
-    "all_posts": {
-        "Advanced Visual Studio Code for Python Developers": "Visual Studio Code, or VS Code for short, is a free and open source code editor by Microsoft. You can use VS Code as a lightweight code editor to make quick changes, or you can configure it as an integrated development environment (IDE) through the use of third-party extensions. In this tutorial, you’re going to look at how to get the most out of VS Code for Python development.",
-        "This is a second post": "This is new body"
-    }
+    "cities": ["Tashkent", "Kokand", "Bukhara"],
+    "count": 3
 }
 ```
 
-**GET** `/posts/<int:post_id>`
+**GET** `/restaurants`
 
-Retrieves a specific post by id
+Retrieves list of all restaurants and number of them
 
 ```
 curl -X GET \
-  https://blog03-api.herokuapp.com/posts/1
+  https://tmenu.herokuapp.com/restaurants
 ```
 
 Sample response:
 ```
 {
-    "body": "The fractions module in Python is arguably one of the most underused elements of the standard library. Even though it may not be well-known, it’s a useful tool to have under your belt because it can help address the shortcomings of floating-point arithmetic in binary. That’s essential if you plan to work with financial data or if you require infinite precision for your calculations.",
-    "title": "Representing Rational Numbers With Python Fractions"
+    "restaurants": ["La Piola", "Piramida", "Ipak Yuli", "Uch baqaloq"],
+    "count": 4
 }
 ```
 
-**GET** `/users`
+**GET** `/cities/<int:id>/restaurants`
 
-Retrieves all existing users
+Retrieves list and number of restaurants of specific city
 
 ```
 curl -X GET \
-  https://blog03-api.herokuapp.com/users'
+  https://tmenu.herokuapp.com/cities/2/restaurants
 ```
 
 Sample response:
 ```
 {
-    "all_users": {
-        "1": "Thomas Party",
-        "2": "Dilbarov Uktamjon",
-        "3": "Xondamir Mo'minov",
-        "4": "Anthony May"
-    }
+    "restaurants": ["Piramida", "Uch baqaloq"]
+    "count": 2
 }
 ```
 
-**GET** `/users/<int:user_id>`
+### Managing data
 
-Retrieves posts of specific users
+**POST** `/restaurants` (Supports both manager and chief role)
 
-```
-curl -X GET \
-  https://blog03-api.herokuapp.com/users/1
-```
-
-Sample response:
-```
-{
-    "user_posts": {
-        "Advanced Visual Studio Code for Python Developers": "Visual Studio Code, or VS Code for short, is a free and open source code editor by Microsoft. You can use VS Code as a lightweight code editor to make quick changes, or you can configure it as an integrated development environment (IDE) through the use of third-party extensions. In this tutorial, you’re going to look at how to get the most out of VS Code for Python development.",
-        "Build a Command-Line To-Do App With Python and Typer": "Building an application to manage your to-do list can be an interesting project when you’re learning a new programming language or trying to take your skills to the next level. In this tutorial, you’ll build a functional to-do application for the command line using Python and Typer, which is a relatively young library for creating powerful command-line interface (CLI) applications in almost no time."
-    }
-}
-```
-
-### Managing data (Members only)
-
-**POST** `/users` (Owner role only)
-
-Create a new user
+Add a new restaurant
 
 ```
 curl -X POST \
-  https://blog03-api.herokuapp.com/users \
-  -H 'Authorization: Bearer <INSERT_YOUR_TOKEN>' \
+  https://tmenu.herokuapp.com/restaurants \
+  -H 'Authorization: Bearer <VALID_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
-    "full_name": "Komilov Sardor"
+    "name": "Choyxona",
+    "description": "Cooks the best plov",
+    "menu": {"meal1": "plov",
+              "meal2": "samsa",
+              "meal3": "lagman",
+              "meal4": "manti",
+              "meal5": "vaju"},
+    "city": "Kokand"
 }'
 ```
 Sample response:
 ```
-{'success': 'True'}
+{'restaurant': [{
+    "name": "Choyxona",
+    "description": "Cooks the best plov",
+    "menu": [{"meal1": "plov",
+              "meal2": "samsa",
+              "meal3": "lagman",
+              "meal4": "manti",
+              "meal5": "vaju"}],
+    "city": "Kokand"
+}]}
 ```
 
-**POST** `/posts` (Owner role only)
+**PATCH** `/restaurants/<int:id>` (manager role only)
 
-Create a new post
-
-```
-curl -X POST \
-  https://blog03-api.herokuapp.com/posts \
-  -H 'Authorization: Bearer <INSERT_YOUR_TOKEN>' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "title": "New Post",
-    "body": "Body for new post",
-    "author": "3"
-}'
-```
-Sample response:
-```
-{'success': 'True'}
-```
-
-**PATCH** `/posts/<int:post_id>` (Supports both owner and assistant role)
-
-Update post
+Update restaurant's data
 
 ```
 curl -X PATCH \
-  https://blog03-api.herokuapp.com/posts/2 \
-  -H 'Authorization: Bearer <INSERT_YOUR_TOKEN>' \
+  https://tmenu.herokuapp.com/restaurants/5 \
+  -H 'Authorization: Bearer <VALID_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
-    "title": "Updated title!"
+    "menu": {"meal1": "mastava",
+             "meal2": "borj",
+             "meal3": "kabab",
+             "meal4": "tabaka",
+             "meal5": "dimlama"}
 }'
 ```
 Sample response:
 ```
-{'success': 'True'}
+{'restaurant': [{
+    "name": "Choyxona",
+    "description": "Cooks the best plov",
+    "menu": [{"meal1": "mastava",
+             "meal2": "borj",
+             "meal3": "kabab",
+             "meal4": "tabaka",
+             "meal5": "dimlama"}],
+    "city": "Kokand"
+}]}
 ```
 
 
-**DELETE** `/posts/<int:post_id>` (Owner role only)
+**DELETE** `/restaurants/<int:id>` (manager role only)
 
-Delete a given post
+Delete a given restaurant
 
 ```
 curl -X DELETE \
-  https://blog03-api.herokuapp.com/posts/4 \
-  -H 'Authorization: Bearer <INSERT_YOUR_TOKEN> ' \
+  https://tmenu.herokuapp.com/restaurants/4 \
+  -H 'Authorization: Bearer <VALID_TOKEN> ' \
 
 ```
 Sample response:
 ```
 {
-  'success': 'True',
-  'deleted': '4'
+  'deleted': 4
 }
 ```
 
@@ -169,7 +152,7 @@ The following section explains how to set up and run the project locally.
 
 ### Installing Dependencies
 
-The project requires Python 3.8. Using a virtual environment such as `pipenv` is recommended. Set up the project as follows:
+The project requires Python 3.9.5 Using a virtual environment such as `pipenv` is recommended. Set up the project as follows:
 
 ```
 
@@ -177,15 +160,14 @@ pipenv shell
 pipenv install
 
 ```
-
 ### Database Setup
 
 
 With Postgres running, create a database and import data using the blog_api.psql file provided. In terminal run:
 ```
 
-sudo -u postgres createdb blog_api
-psql blog_api < blog_api.psql
+sudo -u postgres createdb meal
+psql meal < tmenu.psql
 ```
 
 ### Running the server
@@ -193,8 +175,6 @@ psql blog_api < blog_api.psql
 To run the server, first set the environment variables, then execute:
 
 ```bash
-export APP_SETTINGS="config.DevelopmentConfig"
-export DATABASE_URL="postgresql:///blog_api"
 python manage.py runserver
 ```
 
@@ -203,7 +183,7 @@ python manage.py runserver
 To test the API, first create a test database in postgres and then execute the tests as follows:
 
 ```
-sudo -u postgres createdb api_testing
-psql api_testing < test_blog_api.psql
+sudo -u postgres createdb meal_test
+psql meal_test < tmenu.psql
 python test_app.py
 ```

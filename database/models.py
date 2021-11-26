@@ -55,7 +55,7 @@ class Rest(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String)
-    # the required datatype is [{'meal1': string, 'meal2': string, 'meal3':string, 'meal4':string, 'meal5':string}]
+    # the required datatype is {'meal1': string, 'meal2': string, 'meal3':string, 'meal4':string, 'meal5':string}
     menu = Column(String)
     city_id = Column(Integer, ForeignKey('city.id'), nullable=False)
 
