@@ -10,7 +10,8 @@ import json
 load_dotenv()
 
 database_path = os.environ.get('DATABASE_URL')
-
+if database_path and database_path.startswith("postgres://"):
+    database_path = database_path.replace("postgres://", "postgresql://", 1)
 db = SQLAlchemy()
 
 
