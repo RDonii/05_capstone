@@ -1,6 +1,6 @@
 export DATABASE_URL='postgresql://udcbbbujpxxtue:c070b7908572db536dafa3ea565e7b6fbbd6824061b734e6fcd116ecd0e01fcb@ec2-54-157-16-125.compute-1.amazonaws.com:5432/dd8pv8st41p6ef'
 export AUTH0_DOMAIN='dev-y19m-614.us.auth0.com'
-export ALGORITHMS='RS256'
+export ALGORITHMS='[RS256]'
 export API_AUDIENCE='menu'
 
 # Tokens
