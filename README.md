@@ -2,15 +2,29 @@
 
 https://tmenu.herokuapp.com
 
+This is the final project for the Udacity Full Stack Nanodegree. In this project, I created a backend application that can serve people to find their favorite meals from nearby restaurants without going out.
+
 ## About
 
 This is the simple "Menu" API project. Everyone can get information about todays menu of restaurans which sorted by their located city. Only owners of restaurans can add restaurant to the list after login their account. Deleting and updating is require permission which given only to manager.
 
 ## API
 
-In order to use the API users don't need to be authentificated, but for adding new restaurant - it is indeed crucial. Users can either have a guest, chief and manager status. An overview of the API can be found below as well as in the provided postman collection.
+In order to use the API users don't need to be authentificated, but for deleting, updating or adding new restaurant - it is indeed crucial. Users can either have a guest, chief and manager status. An overview of the API can be found below as well as in the provided postman collection.
 
-### Retreiving data
+## Roles and  Permissons
+Users can either have a guest, chief and manager roles.
+
+### Guest
+Guest has access to all GET method APIs.
+
+### Chief
+Chief have access to all GET method APIs. Also, chief is able to add new restaurant by /restaurants API using POST method.
+
+### Manager
+Manager have all permissions.
+
+### Retreiving data (all roles)
 
 **GET** `/cities`
 
@@ -182,10 +196,9 @@ python manage.py runserver
 
 ## Testing
 
-To test the API, first create a test database in postgres and then execute the tests as follows:
+To test the API you need empty meal_test database. First create a meal_test database in postgres and then execute the tests as follows:
 
 ```
 sudo -u postgres createdb meal_test
-psql meal_test < tmenu.psql
 python test_app.py
 ```

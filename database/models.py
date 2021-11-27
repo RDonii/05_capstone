@@ -9,11 +9,10 @@ import json
 
 load_dotenv()
 
-#database_name = 'meal'
-database_path = 'postgresql://udcbbbujpxxtue:c070b7908572db536dafa3ea565e7b6fbbd6824061b734e6fcd116ecd0e01fcb@ec2-54-157-16-125.compute-1.amazonaws.com:5432/dd8pv8st41p6ef'
-#database_path = "postgresql://{}:{}@{}:{}/{}".format(os.getenv('USER'),os.getenv('PASSWORD'),'localhost','5432',database_name)
+database_path = os.environ.get('DATABASE_URL')
 
 db = SQLAlchemy()
+
 
 def create_db(app, database_path=database_path):
     app.config['SQLALCHEMY_DATABASE_URI'] = database_path
@@ -21,6 +20,7 @@ def create_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     db.create_all()
+
 
 class City(db.Model):
     __tablename__ = "city"
@@ -35,7 +35,7 @@ class City(db.Model):
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
@@ -45,9 +45,10 @@ class City(db.Model):
 
     def format(self):
         return {
-        'id': self.id,
-        'name': self.name
+            'id': self.id,
+            'name': self.name
         }
+
 
 class Rest(db.Model):
     __tablename__ = 'restaurant'
@@ -55,11 +56,12 @@ class Rest(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String)
-    # the required datatype is {'meal1': string, 'meal2': string, 'meal3':string, 'meal4':string, 'meal5':string}
+    # the required datatype is {'meal1': string, 'meal2': string,
+    # 'meal3':string, 'meal4':string, 'meal5':string}
     menu = Column(String)
     city_id = Column(Integer, ForeignKey('city.id'), nullable=False)
 
-    def __init__(self, name, description, menu,city_id):
+    def __init__(self, name, description, menu, city_id):
         self.name = name
         self.description = description
         self.menu = menu
@@ -68,7 +70,7 @@ class Rest(db.Model):
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
@@ -78,9 +80,9 @@ class Rest(db.Model):
 
     def format(self):
         return {
-        'id': self.id,
-        'name': self.name,
-        'description': self.description,
-        'menu': json.loads(self.menu),
-        'city_id': self.city_id
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'menu': json.loads(self.menu),
+            'city_id': self.city_id
         }
