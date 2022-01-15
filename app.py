@@ -18,7 +18,7 @@ def create_app(test_config=None):
 
     @app.route('/')
     def home_page():
-        return 'not implemented'
+        return 'Welcome. I hope you will have fun!'
 
     @app.route('/cities', methods=['GET'])
     def get_all_city():
