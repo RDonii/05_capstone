@@ -1,6 +1,6 @@
 # Menu API Backend
 
-https://tmenu.herokuapp.com
+http://tmenu.herokuapp.com
 
 This is the final project for the Udacity Full Stack Nanodegree. In this project, I created a backend application that can serve people to find their favorite meals from nearby restaurants without going out.
 
