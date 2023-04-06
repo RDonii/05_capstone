@@ -72,6 +72,6 @@ typing-extensions==3.10.0.2
 urllib3==1.26.6
 virtualenv==20.7.2
 webencodings==0.5.1
-Werkzeug==2.0.1
+Werkzeug==2.2.3
 wrapt==1.13.2
 WTForms==2.3.3
